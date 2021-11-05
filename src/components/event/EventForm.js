@@ -50,7 +50,7 @@ export const EventForm = () => {
             const newEventState = Object.assign({}, currentEvent)          // Create copy
             newEventState[event.target.name] = event.target.value 
                // Modify copy
-            setCurrentEvent(newGameState)                                 // Set copy as new state
+            setCurrentEvent(newEventState)                                 // Set copy as new state
         }
 
         
@@ -102,7 +102,7 @@ export const EventForm = () => {
                         {
                             games.map(g => (
                                 <option key={g.id} value={g.id}>
-                                    {g.label}
+                                    {g.title}
                                 </option>
                             ))
                         }
@@ -120,8 +120,8 @@ export const EventForm = () => {
             </fieldset>
             <fieldset>
                 <div className="form-group">
-                    <label htmlFor="title">Date: </label>
-                    <input type="date" name="maker" required autoFocus className="form-control"
+                    <label htmlFor="date">Date: </label>
+                    <input type="date" name="date" required autoFocus className="form-control"
                         value={currentEvent.date}
                         onChange={handleControlledInputChange}
                     />
@@ -130,8 +130,7 @@ export const EventForm = () => {
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="title">Time: </label>
-                    <input type="time" name="numberOfPlayers"  min="1" max="100" required autoFocus className="form-control"
-                        defaultValue="Please Enter a Number"
+                    <input type="time" name="time"  required autoFocus className="form-control"
                         value={currentEvent.time}
                         onChange={handleControlledInputChange}
                     />
@@ -147,15 +146,15 @@ export const EventForm = () => {
                     evt.preventDefault()
 
                     const event = {
-                        maker: currentGame.maker,
-                        title: currentGame.title,
-                        numberOfPlayers: parseInt(currentGame.numberOfPlayers),
-                        skillLevel: parseInt(currentGame.skillLevel),
-                        gameTypeId: parseInt(currentGame.gameTypeId)
+                        gameId: currentEvent.gameId,
+                        organizer: currentEvent.organizer,
+                        description: currentEvent.description,
+                        date:currentEvent.date,
+                        time: currentEvent.time
                     }
 
                     // Send POST request to your API
-                    createEvent(game)
+                    createEvent(event)
                         .then(() => history.push("/events"))
                 }}
                 className="btn btn-primary">Create</button>
