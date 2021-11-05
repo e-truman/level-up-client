@@ -194,3 +194,7 @@ code {
 .icon-send:before {
 	content: "🔓";
 }
+
+section {
+	margin-bottom: 1em;
+}
