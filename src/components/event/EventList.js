@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { getEvents, joinEvent } from "./EventManager.js"
+import { getEvents, joinEvent, leaveEvent } from "./EventManager.js"
 import { useHistory, useParams } from 'react-router-dom'
 
 
@@ -34,14 +34,15 @@ export const EventList = (props) => {
                         <div>
                             {event.date} @ {event.time}
                         </div>
-                        <button className="btn btn-2"
-                                onClick={
-                                    () => {
-                                        joinEvent(event.id)
-                                            .then(() => eventFetcher())
-                                    }
-                                }
-                        >Join</button>
+                        {
+                            event.joined
+                                ? <button className="btn btn-3"
+                                    onClick={() => leaveEvent(event.id).then(() => eventFetcher())}
+                                    >Leave</button>
+                                : <button className="btn btn-2"
+                                    onClick={() => joinEvent(event.id).then(() => eventFetcher())}
+                                    >Join</button>
+                        }
                     </section>
                 })
             }
