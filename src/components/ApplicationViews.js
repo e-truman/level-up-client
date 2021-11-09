@@ -28,6 +28,13 @@ export const ApplicationViews = () => {
             <Route exact path="/profile">
                 <Profile />
             </Route>
+            <Route exact path="/games/edit/:gameId(\d+)">
+                <GameForm />
+            </Route>
+            <Route exact path="/events/edit/:eventId(\d+)">
+                <EventForm />
+            </Route>
         </main>
     </>
 }
+
