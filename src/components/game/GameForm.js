@@ -67,7 +67,7 @@ export const GameForm = () => {
                         .then(() => history.push("/games"))
                 } else {
                     // POST
-                    addGame({
+                    createGame({
                         skillLevel: game.skillLevel,
                         numberOfPlayers: game.numberOfPlayers,
                         title: game.title,
@@ -145,26 +145,10 @@ export const GameForm = () => {
                 </div>
             </fieldset>
 
-
-            {/* TODO: create the rest of the input fields */}
-
             <button type="submit"
                 onClick={evt => {
-                    // Prevent form from being submitted
                     evt.preventDefault()
                     constructNewGame()
-
-                    // const game = {
-                    //     maker: game.maker,
-                    //     title: currentGame.title,
-                    //     numberOfPlayers: parseInt(currentGame.numberOfPlayers),
-                    //     skillLevel: parseInt(currentGame.skillLevel),
-                    //     gameTypeId: parseInt(currentGame.gameTypeId)
-                    // }
-
-                    // Send POST request to your API
-                    createGame(game)
-                        .then(() => history.push("/games"))
                 }}
                 className="btn btn-primary">{editMode ? "Save Updates" : "Create"}</button>
         </form>
