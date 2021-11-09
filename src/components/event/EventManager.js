@@ -42,3 +42,27 @@ export const joinEvent = eventId => {
         .then(response => response.json())
         .then(getEvents)
 }
+
+
+export const updateEvent = event => {
+    debugger
+    return fetch(`http://localhost:8000/events/${event.id}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("lu_token")}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(event)
+    })
+        .then(getEvents)
+}
+
+
+export const getEventById = (id) => {
+    return fetch(`http://localhost:8000/events/${id}`, {
+        headers:{
+            "Authorization": `Token ${localStorage.getItem("lu_token")}`
+        }
+    })
+        .then(response => response.json())
+}

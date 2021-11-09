@@ -38,11 +38,16 @@ export const EventList = (props) => {
                             event.joined
                                 ? <button className="btn btn-3"
                                     onClick={() => leaveEvent(event.id).then(() => eventFetcher())}
-                                    >Leave</button>
+                                >Leave</button>
                                 : <button className="btn btn-2"
                                     onClick={() => joinEvent(event.id).then(() => eventFetcher())}
-                                    >Join</button>
+                                >Join</button>
                         }
+                        <button className="btn btn-2 btn-sep icon-create"
+                        onClick={() => {
+                            history.push({ pathname: `/events/edit/${event.id}` })
+                        }}
+            >Edit</button>
                     </section>
                 })
             }

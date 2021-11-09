@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useHistory, useParams } from 'react-router-dom'
-import { createEvent } from './EventManager.js'
+import { createEvent, getEventById, updateEvent } from './EventManager.js'
 import { getGames} from '../game/GameManager'
 
 
@@ -9,84 +9,58 @@ export const EventForm = () => {
     const { eventId } = useParams()
     const [games, setGames] = useState([])
     const editMode = eventId ? true : false  // true or false
+    const [event, setEvent] = useState({})
 
-    /*
-        Since the input fields are bound to the values of
-        the properties of this state variable, you need to
-        provide some default values.
-    */
-    const [currentEvent, setCurrentEvent] = useState({
-        gameId: 0,
-        organizerId: parseInt(localStorage.getItem("lu_token")),
-        description: "",
-        date: "",
-        time: 0
-    })
+
 
     useEffect(() => {
         if (editMode) {
             getEventById(parseInt(eventId)).then((res) => {
-                setEvent(res)
+                setEvent({
+                    id: res.id,
+                    gameId: res.game_id,
+                    organizerId: res.organizer_id,
+                    description: res.description,
+                    date: res.date,
+                    time: res.time
+                })
             })
         }
         getGames().then(gameData => setGames(gameData))
     }, [])
 
-    /*
-        REFACTOR CHALLENGE START
-
-        Can you refactor this code so that all property
-        state changes can be handled with a single function
-        instead of five functions that all, largely, do
-        the same thing?
-
-        One hint: [event.target.name]
-    */
         const handleControlledInputChange = (event) => {
-            /*
-                When changing a state object or array, always create a new one
-                and change state instead of modifying current one
-            */
-            const newEventState = Object.assign({}, currentEvent)          // Create copy
+            const newEventState = Object.assign({}, event)          // Create copy
             newEventState[event.target.name] = event.target.value 
                // Modify copy
-            setCurrentEvent(newEventState)                                 // Set copy as new state
+            setEvent(newEventState)                                 // Set copy as new state
         }
 
-        
-
-
-    // const changeGameTitleState = (event) => {
-    //     const newGameState = { ...currentGame }
-    //     newGameState.title = event.target.value
-    //     setCurrentGame(newGameState)
-    // }
-
-    // const changeGameMakerState = (event) => {
-    //     const newGameState = { ...currentGame }
-    //     newGameState.maker = event.target.value
-    //     setCurrentGame(newGameState)
-    // }
-
-    // const changeGamePlayersState = (event) => {
-    //     const newGameState = { ...currentGame }
-    //     newGameState.numberOfPlayers = event.target.value
-    //     setCurrentGame(newGameState)
-    // }
-
-    // const changeGameSkillLevelState = (event) => {
-    //     const newGameState = { ...currentGame }
-    //     newGameState.skillLevel = event.target.value
-    //     setCurrentGame(newGameState)
-    // }
-
-    // const changeGameTypeState = (event) => {
-    //     const newGameState = { ...currentGame }
-    //     newGameState.gameTypeId = event.target.value
-    //     setCurrentGame(newGameState)
-    // }
-    /* REFACTOR CHALLENGE END */
-
+        const constructNewEvent = () => {
+            // debugger
+                if (editMode) {
+                    // PUT: 
+                    updateEvent({
+                        id: event.id,
+                        eventId: event.eventId,
+                        organizerId: event.organizerId,
+                        description: event.description,
+                        date: event.date,
+                        time: event.time
+                    })
+                        .then(() => history.push("/events"))
+                } else {
+                    // POST
+                    createEvent({
+                        eventId: event.eventId,
+                        organizerId: event.organizerId,
+                        description: event.description,
+                        date: event.date,
+                        time: event.time
+                    })
+                        .then(() => history.push("/events"))
+                }
+            }
 
     return (
         <form className="gameForm">
@@ -95,7 +69,7 @@ export const EventForm = () => {
                 <div className="form-group">
                     <label htmlFor="eventTypeId">Game: </label>
                     <select name="gameId" className="form-control"
-                        value={currentEvent.gameId}
+                        value={event.gameId}
                         onChange={handleControlledInputChange}>
 
                         <option value="0">Select a Game</option>
@@ -113,7 +87,7 @@ export const EventForm = () => {
                 <div className="form-group">
                     <label htmlFor="title">Description: </label>
                     <input type="text" name="description" required autoFocus className="form-control"
-                        value={currentEvent.description}
+                        value={event.description}
                         onChange={handleControlledInputChange}
                     />
                 </div>
@@ -122,7 +96,7 @@ export const EventForm = () => {
                 <div className="form-group">
                     <label htmlFor="date">Date: </label>
                     <input type="date" name="date" required autoFocus className="form-control"
-                        value={currentEvent.date}
+                        value={event.date}
                         onChange={handleControlledInputChange}
                     />
                 </div>
@@ -131,7 +105,7 @@ export const EventForm = () => {
                 <div className="form-group">
                     <label htmlFor="title">Time: </label>
                     <input type="time" name="time"  required autoFocus className="form-control"
-                        value={currentEvent.time}
+                        value={event.time}
                         onChange={handleControlledInputChange}
                     />
                 </div>
@@ -144,20 +118,9 @@ export const EventForm = () => {
                 onClick={evt => {
                     // Prevent form from being submitted
                     evt.preventDefault()
-
-                    const event = {
-                        gameId: currentEvent.gameId,
-                        organizer: currentEvent.organizer,
-                        description: currentEvent.description,
-                        date:currentEvent.date,
-                        time: currentEvent.time
-                    }
-
-                    // Send POST request to your API
-                    createEvent(event)
-                        .then(() => history.push("/events"))
+                    constructNewEvent()
                 }}
-                className="btn btn-primary">Create</button>
+                className="btn btn-primary">{editMode ? "Save Updates" : "Create"}</button>
         </form>
     )
 }
