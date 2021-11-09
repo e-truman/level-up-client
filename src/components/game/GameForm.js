@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useHistory, useParams } from 'react-router-dom'
-import { createGame, getGameTypes, getGameById } from './GameManager.js'
+import { createGame, getGameTypes, getGameById, updateGame } from './GameManager.js'
 
 
 export const GameForm = () => {
@@ -27,11 +27,12 @@ export const GameForm = () => {
         if (editMode) {
             getGameById(parseInt(gameId)).then((res) => {
                 setGame({
+                    id: res.id,
                     skillLevel: res.skill_level,
                     numberOfPlayers: res.number_of_players,
                     title: res.title,
                     maker: res.maker,
-                    gameTypeId: res.game_type_id
+                    gameTypeId: res.game_type.id
                 }
                 )
             })
@@ -39,16 +40,7 @@ export const GameForm = () => {
         getGameTypes().then(gameTypesData => setGameTypes(gameTypesData))
     }, [])
 
-    /*
-        REFACTOR CHALLENGE START
-
-        Can you refactor this code so that all property
-        state changes can be handled with a single function
-        instead of five functions that all, largely, do
-        the same thing?
-
-        One hint: [event.target.name]
-    */
+ 
         const handleControlledInputChange = (event) => {
             /*
                 When changing a state object or array, always create a new one
@@ -63,13 +55,14 @@ export const GameForm = () => {
         const constructNewGame = () => {
             // debugger
                 if (editMode) {
-                    // PUT
+                    // PUT: 
                     updateGame({
+                        id: game.id,
                         skillLevel: game.skillLevel,
                         numberOfPlayers: game.numberOfPlayers,
                         title: game.title,
                         maker: game.maker,
-                        gameTypeId: game.gameTypeId
+                        gameTypeId: parseInt(game.gameTypeId)
                     })
                         .then(() => history.push("/games"))
                 } else {
@@ -79,7 +72,7 @@ export const GameForm = () => {
                         numberOfPlayers: game.numberOfPlayers,
                         title: game.title,
                         maker: game.maker,
-                        gameTypeId: game.gameTypeId
+                        gameTypeId: parseInt(game.gameTypeId)
                     })
                         .then(() => history.push("/games"))
                 }
@@ -127,9 +120,11 @@ export const GameForm = () => {
                         // defaultValue={game.gameTypeId}
                         onChange={handleControlledInputChange}>
 
-                        <option value={editMode ? game.game_type_id : "0"}>Select a Game Type</option>
+                        <option value="0">Select a Game Type</option>
                         {
                             gameTypes.map(type => (
+                                type.id == game.gameTypeId ? <option selected key={type.id} value={type.id}>
+                                {type.label}  </option>: 
                                 <option key={type.id} value={type.id}>
                                     {type.label}
                                 </option>

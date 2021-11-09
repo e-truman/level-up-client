@@ -29,7 +29,7 @@ export const GameList = (props) => {
                 onClick={() => {
                     history.push({ pathname: `/games/edit/${game.id}`})
                 }}
-            >Register New Game</button>
+            >Edit</button>
                         </section>
                     })
                 }

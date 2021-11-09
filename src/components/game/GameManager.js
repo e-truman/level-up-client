@@ -42,3 +42,16 @@ export const getGameTypes = () => {
         .then(response => response.json())
 }
 
+export const updateGame = game => {
+    debugger
+    return fetch(`http://localhost:8000/games/${game.id}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("lu_token")}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(game)
+    })
+        .then(getGames)
+}
+
