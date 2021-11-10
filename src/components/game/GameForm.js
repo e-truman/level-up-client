@@ -10,18 +10,6 @@ export const GameForm = () => {
     const [game, setGame] = useState({})
     const editMode = gameId ? true : false  // true or false
 
-    /*
-        Since the input fields are bound to the values of
-        the properties of this state variable, you need to
-        provide some default values.
-    */
-    // const [currentGame, setCurrentGame] = useState({})
-        // skillLevel: 1,
-        // numberOfPlayers: 0,
-        // title: "",
-        // maker: "",
-        // gameTypeId: 0
-    
 
     useEffect(() => {
         if (editMode) {
@@ -80,7 +68,7 @@ export const GameForm = () => {
 
     return (
         <form className="gameForm">
-            <h2 className="gameForm__title">Register New Game</h2>
+            <h2 className="gameForm__title">{editMode ? "Edit Game" : "Register New Game"}</h2>
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="title">Title: </label>

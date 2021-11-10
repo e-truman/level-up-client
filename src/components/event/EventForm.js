@@ -18,8 +18,8 @@ export const EventForm = () => {
             getEventById(parseInt(eventId)).then((res) => {
                 setEvent({
                     id: res.id,
-                    gameId: res.game_id,
-                    organizerId: res.organizer_id,
+                    gameId: res.game.id,
+                    organizerId: res.organizer.id,
                     description: res.description,
                     date: res.date,
                     time: res.time
@@ -42,7 +42,7 @@ export const EventForm = () => {
                     // PUT: 
                     updateEvent({
                         id: event.id,
-                        eventId: event.eventId,
+                        gameId: parseInt(event.gameId),
                         organizerId: event.organizerId,
                         description: event.description,
                         date: event.date,
@@ -52,8 +52,8 @@ export const EventForm = () => {
                 } else {
                     // POST
                     createEvent({
-                        eventId: event.eventId,
-                        organizerId: event.organizerId,
+                        gameId: parseInt(event.eventId),
+                        organizerId: parseInt(event.organizerId),
                         description: event.description,
                         date: event.date,
                         time: event.time
@@ -64,7 +64,7 @@ export const EventForm = () => {
 
     return (
         <form className="gameForm">
-            <h2 className="gameForm__title">Register New Event</h2>
+            <h2 className="gameForm__title">{editMode ? "Edit Event" : "Register New Event"}</h2>
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="eventTypeId">Game: </label>
@@ -75,6 +75,9 @@ export const EventForm = () => {
                         <option value="0">Select a Game</option>
                         {
                             games.map(g => (
+                                g.id === event.gameId ? <option selected key={g.id} value={g.id}>
+                                    {g.title}
+                                </option> :
                                 <option key={g.id} value={g.id}>
                                     {g.title}
                                 </option>
