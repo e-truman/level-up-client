@@ -43,7 +43,6 @@ export const getGameTypes = () => {
 }
 
 export const updateGame = game => {
-    debugger
     return fetch(`http://localhost:8000/games/${game.id}`, {
         method: "PUT",
         headers: {

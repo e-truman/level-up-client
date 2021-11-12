@@ -8,8 +8,8 @@ export const EventForm = () => {
     const history = useHistory()
     const { eventId } = useParams()
     const [games, setGames] = useState([])
-    const editMode = eventId ? true : false  // true or false
     const [event, setEvent] = useState({})
+    const editMode = eventId ? true : false  // true or false
 
 
 
@@ -29,21 +29,27 @@ export const EventForm = () => {
         getGames().then(gameData => setGames(gameData))
     }, [])
 
-        const handleControlledInputChange = (event) => {
+
+
+    // const handleControlledInputChange = (event) => {
+    //     const copyEvent = { ...event }
+    //     copyEvent[event.target.name] = event.target.value
+    //     setEvent(copyEvent)
+    //   }
+
+        const handleControlledInputChange = (evt) => {
             const newEventState = Object.assign({}, event)          // Create copy
-            newEventState[event.target.name] = event.target.value 
-               // Modify copy
+            newEventState[evt.target.name] = evt.target.value 
             setEvent(newEventState)                                 // Set copy as new state
         }
 
         const constructNewEvent = () => {
-            // debugger
                 if (editMode) {
                     // PUT: 
                     updateEvent({
-                        id: event.id,
+                        id: parseInt(event.id),
                         gameId: parseInt(event.gameId),
-                        organizerId: event.organizerId,
+                        organizerId: parseInt(event.organizerId),
                         description: event.description,
                         date: event.date,
                         time: event.time
@@ -52,7 +58,7 @@ export const EventForm = () => {
                 } else {
                     // POST
                     createEvent({
-                        gameId: parseInt(event.eventId),
+                        gameId: parseInt(event.gameId),
                         organizerId: parseInt(event.organizerId),
                         description: event.description,
                         date: event.date,
@@ -74,8 +80,8 @@ export const EventForm = () => {
 
                         <option value="0">Select a Game</option>
                         {
-                            games.map(g => (
-                                g.id === event.gameId ? <option selected key={g.id} value={g.id}>
+                            games?.map(g => (
+                                g.id == event.gameId ? <option selected key={g.id} value={g.id}>
                                     {g.title}
                                 </option> :
                                 <option key={g.id} value={g.id}>
